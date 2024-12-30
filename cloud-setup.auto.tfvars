@@ -209,6 +209,6 @@ gke_clusters = {
     network_name            = "vpc-dev"
     subnet_name             = "subnet-dev-gke"
   #  master_authorized_range = "10.100.0.0/24"
-    master_authorized_range = "0.0.0.0/0"
+    master_authorized_range = "10.0.0.0/8"
   }
 }

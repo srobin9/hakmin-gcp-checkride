@@ -119,6 +119,7 @@ module "gke_cluster_nodepool" {
   depends_on = [module.gke_cluster]
 }
 
+/**
 module "vm_bastion" {
   source       = "./modules/32-compute-vm"
   for_each     = var.gke_clusters
@@ -127,7 +128,7 @@ module "vm_bastion" {
   region       = each.value.region
   name         = "${each.key}-bastion"
   network_interfaces = [{
-    network    = module.service_vpcs[each.value.network_name].self_link
+    network    = module.service_vpcs[each.key].self_link
     subnetwork = try(module.service_vpcs[each.value.network_name].subnet_self_links["${each.value.region}/subnet-${each.key}-general"], null)
     nat        = false
     addresses  = null
@@ -148,3 +149,4 @@ module "vm_bastion" {
   shielded_config        = var.node_shielded_instance_config
   depends_on             = [module.service_vpcs]
 }
+**/
