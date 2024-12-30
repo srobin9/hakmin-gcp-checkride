@@ -19,7 +19,7 @@ module "cs-logging-destination" {
   source  = "terraform-google-modules/log-export/google//modules/logbucket"
   version = "~> 8.0"
 
-  project_id               = module.cs-project-logging-monitoring.project_id
+  project_id               = module.shared_project_module["central-logging-monitoring"].project_id
   name                     = "kimhakmin.altostrat-logging"
   location                 = "global"
   retention_days           = 30
