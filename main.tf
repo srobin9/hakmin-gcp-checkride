@@ -84,18 +84,22 @@ module "gke_cluster" {
   location                = each.value.region
   network                 = each.value.network_name
   subnetwork              = each.value.subnet_name
+  enable_autopilot        = each.value.enable_autopilot
   secondary_range_pods    = "pods"
   secondary_range_services = "services"
   default_max_pods_per_node = 32
+/**
   master_authorized_ranges = {
     internal-vms = each.value.master_authorized_range
   }
+**/
   private_cluster_config = {
     enable_private_nodes    = true
-    enable_private_endpoint = true
+    enable_private_endpoint = false
     master_ipv4_cidr_block  = var.private_service_ranges.cluster
     master_global_access    = true
   }
+
   addons                 = var.gke_addons
   enable_shielded_nodes  = true
 
@@ -150,3 +154,19 @@ module "vm_bastion" {
   depends_on             = [module.service_vpcs]
 }
 **/
+
+module "helm" {
+  source          = "./modules/41-helm-jenkins"
+
+  for_each        = var.helm_jenkins
+  release_name    = "${each.key}-jenkins"
+  namespace       = "${each.key}-jenkins-namespace"
+  chart_version   = each.value.chart_version
+  ingress_enabled = each.value.ingress_enabled
+  ingress_host_name = each.value.ingress_host_name
+
+  template_vars = {
+      admin_user = each.value.admin_user
+      admin_password = each.value.admin_password
+  }
+}

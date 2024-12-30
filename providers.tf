@@ -16,26 +16,20 @@ provider "google-beta" {
   region                = var.region # 리전 변수 추가
 }
 
-# Kubernetes Provider 설정 (기존 클러스터 연결)
-provider "kubernetes" {
-  # config_path = "~/.kube/config"  # 로컬 kubeconfig 파일 사용 시
-  # 또는 host, client_certificate, client_key, cluster_ca_certificate 등을 사용하여 직접 설정 가능
+data "google_client_config" "default" {}
 
-  # 예시: Google Kubernetes Engine (GKE) 클러스터에 연결
-  host                   = data.google_container_cluster.my_cluster.endpoint
-  token                  = data.google_client_config.current.access_token
-  cluster_ca_certificate = base64decode(data.google_container_cluster.my_cluster.master_auth.0.cluster_ca_certificate)
+# Kubernetes 제공자 구성
+provider "kubernetes" {
+    host                   = "https://${module.gke_cluster["dev"].cluster_endpoint}"
+    token                  = data.google_client_config.default.access_token
+    cluster_ca_certificate = base64decode(module.gke_cluster["dev"].cluster_ca_certificate)
 }
 
-# Helm Provider 설정
+# Helm 제공자 구성
 provider "helm" {
-  kubernetes {
-    # config_path = "~/.kube/config" # 로컬 kubeconfig 파일 사용 시
-    # 또는 host, client_certificate, client_key, cluster_ca_certificate 등을 사용하여 직접 설정 가능
-
-    # 예시: Google Kubernetes Engine (GKE) 클러스터에 연결
-    host                   = data.google_container_cluster.my_cluster.endpoint
-    token                  = data.google_client_config.current.access_token
-    cluster_ca_certificate = base64decode(data.google_container_cluster.my_cluster.master_auth.0.cluster_ca_certificate)
-  }
+    kubernetes {
+      host                   = "https://${module.gke_cluster["dev"].cluster_endpoint}"
+      token                  = data.google_client_config.default.access_token
+      cluster_ca_certificate = base64decode(module.gke_cluster["dev"].cluster_ca_certificate)
+    }
 }

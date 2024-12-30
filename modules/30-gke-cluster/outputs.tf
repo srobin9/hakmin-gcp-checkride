@@ -20,12 +20,12 @@ output "cluster" {
   value       = google_container_cluster.cluster
 }
 
-output "endpoint" {
+output "cluster_endpoint" {
   description = "Cluster endpoint."
   value       = google_container_cluster.cluster.endpoint
 }
 
-output "location" {
+output "cluster_location" {
   description = "Cluster location."
   value       = google_container_cluster.cluster.location
 }
@@ -35,13 +35,17 @@ output "master_version" {
   value       = google_container_cluster.cluster.master_version
 }
 
-output "name" {
+output "cluster_name" {
   description = "Cluster name."
   value       = google_container_cluster.cluster.name
 }
 
-output "ca_certificate" {
+output "cluster_ca_certificate" {
   description = "Public certificate of the cluster (base64-encoded)."
   value       = google_container_cluster.cluster.master_auth.0.cluster_ca_certificate
   sensitive   = true
+}
+
+output "cluster_project_id" {
+  value = google_container_cluster.cluster.project
 }

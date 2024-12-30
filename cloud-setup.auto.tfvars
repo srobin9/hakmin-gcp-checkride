@@ -208,7 +208,17 @@ gke_clusters = {
     region                  = "asia-northeast3"
     network_name            = "vpc-dev"
     subnet_name             = "subnet-dev-gke"
+    enable_autopilot        = false
   #  master_authorized_range = "10.100.0.0/24"
-    master_authorized_range = "10.0.0.0/8"
+  }
+}
+
+helm_jenkins = {
+  "dev" = {
+    chart_version     = "5.7.26"
+    ingress_enabled   = true
+    ingress_host_name = "jenkins.example.com"
+    admin_user        = "admin"
+    admin_password    = "admin12334"
   }
 }

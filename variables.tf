@@ -119,7 +119,11 @@ variable "gke_clusters" {
     region                  = string
     network_name            = string
     subnet_name             = string
-    master_authorized_range = string
+    enable_autopilot        = bool
+  #  master_authorized_range = string
+
+
+  
   }))
 }
 
@@ -183,4 +187,15 @@ variable "gke_addons" {
     network_policy_config                 = false
     gce_persistent_disk_csi_driver_config = false
   }
+}
+
+variable "helm_jenkins" {
+  description = "Helm Jenkins configurations"
+  type = map(object({
+    chart_version     = string
+    ingress_enabled   = bool
+    ingress_host_name = string
+    admin_user        = string
+    admin_password    = string
+  }))
 }
