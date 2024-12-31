@@ -18,8 +18,18 @@ resource "helm_release" "jenkins" {
   version    = var.chart_version
 
   values = [
-    templatefile("${path.module}/jenkins_values.tpl", var.template_vars)
+    "${file("./modules/41-helm-jenkins/jenkins_values.yaml")}"
   ]
+
+  set_sensitive {
+    name = "controller.admin.username"
+    value = var.admin_user
+  }
+
+  set_sensitive {
+    name = "controller.admin.password"
+    value = var.admin_password
+  }
 
   # values.yaml 파일에서 설정할 수 없는 값들을 설정
   set {

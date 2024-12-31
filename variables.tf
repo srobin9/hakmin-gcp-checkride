@@ -199,3 +199,10 @@ variable "helm_jenkins" {
     admin_password    = string
   }))
 }
+
+variable "helm_argocd" {
+  description = "Helm ArgoCD configurations"
+  type = map(object({
+    chart_version       = string
+  }))
+}

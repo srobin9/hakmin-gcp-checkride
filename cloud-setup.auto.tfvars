@@ -222,3 +222,9 @@ helm_jenkins = {
     admin_password    = "admin12334"
   }
 }
+
+helm_argocd = {
+  "dev" = {
+    chart_version     = "7.7.11"
+  }
+}

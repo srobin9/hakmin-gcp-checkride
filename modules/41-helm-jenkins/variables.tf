@@ -48,8 +48,14 @@ variable "ingress_host_name" {
   default = ""
 }
 
-variable "template_vars" {
-  description = "Variables to be passed to the values.tpl template"
-  type = map(any)
-  default = {}
+variable "admin_user" {
+  description = "Admin name for Jenkins"
+  type = string
+  default = ""
+}
+
+variable "admin_password" {
+  description = "Admin password for Jenkins"
+  type = string
+  default = ""
 }

@@ -155,18 +155,27 @@ module "vm_bastion" {
 }
 **/
 
-module "helm" {
-  source          = "./modules/41-helm-jenkins"
+module "helm-jenkins" {
+  source            = "./modules/41-helm-jenkins"
 
-  for_each        = var.helm_jenkins
-  release_name    = "${each.key}-jenkins"
-  namespace       = "${each.key}-jenkins-namespace"
-  chart_version   = each.value.chart_version
-  ingress_enabled = each.value.ingress_enabled
+  for_each          = var.helm_jenkins
+  release_name      = "${each.key}-jenkins"
+  namespace         = "${each.key}-jenkins-namespace"
+  chart_version     = each.value.chart_version
+  ingress_enabled   = each.value.ingress_enabled
   ingress_host_name = each.value.ingress_host_name
+  admin_user        = each.value.admin_user
+  admin_password    = each.value.admin_password
 
-  template_vars = {
-      admin_user = each.value.admin_user
-      admin_password = each.value.admin_password
-  }
+}
+
+module "helm-argocd" {
+  source            = "./modules/42-helm-argocd"
+
+  for_each            = var.helm_argocd
+  release_name        = "${each.key}-argocd"
+  namespace           = "${each.key}-argocd-namespace"
+  chart_version       = each.value.chart_version
+  argocd_server_host  = "${each.key}-argocd-server-host"
+
 }
