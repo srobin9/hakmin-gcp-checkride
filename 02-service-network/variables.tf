@@ -33,6 +33,12 @@ variable "project_id" {
   type = string
 }
 
+variable "project_name" {
+  description = "Workload project name"
+  type = string
+}
+
+
 variable "network_name" {
   description = "VPC network name"
   type = string
@@ -41,9 +47,9 @@ variable "network_name" {
 variable "subnet_config" {
   description = "Subnet configurations"
   type = list(object({
-    subnet_ip           = string
-    subnet_name         = string
-    subnet_region       = string
+    name                = string
+    ip_cidr_range       = string
+    region              = string
     secondary_ip_ranges = optional(map(string))
     flow_logs_config    = optional(object({
       flow_sampling         = number
