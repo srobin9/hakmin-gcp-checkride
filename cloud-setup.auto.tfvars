@@ -195,10 +195,6 @@ net_vpcs = {
   }
 }
 
-private_service_ranges = {
-    cluster = "10.100.11.0/28"
-}
-
 nat_region = "asia-northeast3"
 
 gke_clusters = {
@@ -208,7 +204,46 @@ gke_clusters = {
     region                  = "asia-northeast3"
     network_name            = "vpc-dev"
     subnet_name             = "subnet-dev-gke"
+    enable_autopilot        = true
+    gateway_channel         = "CHANNEL_STANDARD"
   #  master_authorized_range = "10.100.0.0/24"
-    master_authorized_range = "0.0.0.0/0"
+  }
+}
+
+private_cluster_config = {
+    enable_private_nodes    = true
+    enable_private_endpoint = false
+    master_ipv4_cidr_block  = "192.168.10.0/28"
+    master_global_access    = true
+}
+
+gke_gateway = {
+    gateway_name      = "http-external"
+    gateway_namespace = "gke-gateway-namespace"
+  #  tls_secret_name   = ""
+}
+
+helm_jenkins = {
+  "dev" = {
+    chart_version     = "5.7.26"
+    ingress_enabled   = true
+    ingress_host_name = "jenkins.example.com"
+    admin_user        = "admin"
+    admin_password    = "admin1234"
+  }
+}
+
+helm_argocd = {
+  "dev" = {
+    chart_version     = "7.7.11"
+  }
+}
+
+helm_wordpress = {
+  "dev" = {
+##    chart_version     = "7.7.11"
+    admin_user        = "admin"
+    admin_password    = "admin1234"
+    db_password       = "dbms1234"
   }
 }

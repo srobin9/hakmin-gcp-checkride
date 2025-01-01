@@ -15,7 +15,7 @@
 # Fabric release: v36.0.1
 
 terraform {
-  required_version = ">= 1.3"
+  required_version = ">= 1.5.0"
 
   required_providers {
     google = {
@@ -28,11 +28,11 @@ terraform {
     }
     helm = {
       source  = "hashicorp/helm"
-      version = ">= 2.0.0"
+      version = ">= 2.12.1"
     }
     kubernetes = {
       source  = "hashicorp/kubernetes"
-      version = ">= 2.0.0"
+      version = ">= 2.25.0"
     }
   }
   provider_meta "google" {

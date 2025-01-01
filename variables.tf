@@ -119,8 +119,26 @@ variable "gke_clusters" {
     region                  = string
     network_name            = string
     subnet_name             = string
-    master_authorized_range = string
+    enable_autopilot        = bool
+    gateway_channel         = string
+  #  master_authorized_range = string 
   }))
+}
+
+variable "create_gke_cluster" {
+  description = "Whether to create a GKE cluster"
+  type        = bool
+  default     = true
+}
+
+variable "gke_gateway" {
+  description = "gke gateway configurations"
+  type = map(string)
+  default = {
+    gateway_name      = "http-external"
+    gateway_namespace = "gke-gateway-namespace"
+  #  tls_secret_name   = ""
+  }
 }
 
 variable "node_machine_type" {
@@ -135,11 +153,14 @@ variable "initial_node_count" {
   default     = 1
 }
 
-variable "private_service_ranges" {
-  description = "Private service IP CIDR ranges."
+variable "private_cluster_config" {
+  description = "Priviate cluster configuration including private service IP CIDR ranges."
   type        = map(string)
   default = {
-    cluster = "192.168.10.0/28"
+    enable_private_nodes    = true
+    enable_private_endpoint = false
+    master_ipv4_cidr_block  = "192.168.10.0/28"
+    master_global_access    = true
   }
 }
 
@@ -183,4 +204,32 @@ variable "gke_addons" {
     network_policy_config                 = false
     gce_persistent_disk_csi_driver_config = false
   }
+}
+
+variable "helm_jenkins" {
+  description = "Helm Jenkins configurations"
+  type = map(object({
+    chart_version     = string
+    ingress_enabled   = bool
+    ingress_host_name = string
+    admin_user        = string
+    admin_password    = string
+  }))
+}
+
+variable "helm_argocd" {
+  description = "Helm ArgoCD configurations"
+  type = map(object({
+    chart_version       = string
+  }))
+}
+
+variable "helm_wordpress" {
+  description = "Helm Wordpress configurations"
+  type = map(object({
+##    chart_version       = string
+    admin_user        = string
+    admin_password    = string
+    db_password       = string
+  }))
 }

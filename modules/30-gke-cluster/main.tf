@@ -44,12 +44,17 @@ resource "google_container_cluster" "cluster" {
   resource_labels             = var.labels
   default_max_pods_per_node   = var.enable_autopilot ? null : var.default_max_pods_per_node
   enable_intranode_visibility = var.enable_intranode_visibility
-  enable_shielded_nodes       = var.enable_shielded_nodes
   enable_tpu                  = var.enable_tpu
   initial_node_count          = 1
   remove_default_node_pool    = var.enable_autopilot ? null : true
   datapath_provider           = var.enable_dataplane_v2 ? "ADVANCED_DATAPATH" : "DATAPATH_PROVIDER_UNSPECIFIED"
   enable_autopilot            = var.enable_autopilot == true ? true : null
+
+  gateway_api_config {
+    channel = var.gateway_channel
+  }
+
+  enable_shielded_nodes = var.enable_autopilot == false ? var.enable_shielded_nodes : null
 
   # node_config {}
   # NOTE: Default node_pool is deleted, so node_config (here) is extranneous.
@@ -61,35 +66,38 @@ resource "google_container_cluster" "cluster" {
   }
 
   # TODO(ludomagno): compute addons map in locals and use a single dynamic block
-  addons_config {
-    dns_cache_config {
-      enabled = var.addons.dns_cache_config
-    }
-    http_load_balancing {
-      disabled = !var.addons.http_load_balancing
-    }
-    horizontal_pod_autoscaling {
-      disabled = !var.addons.horizontal_pod_autoscaling
-    }
-    dynamic "network_policy_config" {
-      for_each = !var.enable_autopilot ? [""] : []
-      content {
-        disabled = !var.addons.network_policy_config
+  dynamic "addons_config" {
+    for_each = var.enable_autopilot == false ? [true] : []
+    content {
+      dns_cache_config {
+        enabled = var.addons.dns_cache_config
       }
-    }
-    cloudrun_config {
-      disabled = !var.addons.cloudrun_config
-    }
+      http_load_balancing {
+        disabled = !var.addons.http_load_balancing
+      }
+      horizontal_pod_autoscaling {
+        disabled = !var.addons.horizontal_pod_autoscaling
+      }
+      dynamic "network_policy_config" {
+        for_each = !var.enable_autopilot ? [""] : []
+        content {
+          disabled = !var.addons.network_policy_config
+        }
+      }
+      cloudrun_config {
+        disabled = !var.addons.cloudrun_config
+      }
 /**
-    # The option is supported only in google_beta provider.
-    istio_config {
-      disabled = !var.addons.istio_config.enabled
-      auth     = var.addons.istio_config.tls ? "AUTH_MUTUAL_TLS" : "AUTH_NONE"
+      # The option is supported only in google_beta provider.
+      istio_config {
+        disabled = !var.addons.istio_config.enabled
+        auth     = var.addons.istio_config.tls ? "AUTH_MUTUAL_TLS" : "AUTH_NONE"
+      }
+      gce_persistent_disk_csi_driver_config {
+        enabled = var.addons.gce_persistent_disk_csi_driver_config
+      }
+**/
     }
-    gce_persistent_disk_csi_driver_config {
-      enabled = var.addons.gce_persistent_disk_csi_driver_config
-    }
-**/  
   }
 
   # TODO(ludomagno): support setting address ranges instead of range names
