@@ -60,6 +60,12 @@ variable "authenticator_security_group" {
   default     = null
 }
 
+variable "gateway_channel" {
+  description = "CHANNEL_DISABLED, CHANNEL_EXPERIMENTAL, CHANNEL_STANDARD"
+  type        = string
+  default     = "CHANNEL_STANDARD"
+}
+
 variable "cluster_autoscaling" {
   description = "Enable and configure limits for Node Auto-Provisioning with Cluster Autoscaler."
   type = object({

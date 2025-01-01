@@ -85,6 +85,7 @@ module "gke_cluster" {
   network                 = each.value.network_name
   subnetwork              = each.value.subnet_name
   enable_autopilot        = each.value.enable_autopilot
+  gateway_channel         = each.value.gateway_channel
   secondary_range_pods    = "pods"
   secondary_range_services = "services"
   default_max_pods_per_node = 32
@@ -93,12 +94,7 @@ module "gke_cluster" {
     internal-vms = each.value.master_authorized_range
   }
 **/
-  private_cluster_config = {
-    enable_private_nodes    = true
-    enable_private_endpoint = false
-    master_ipv4_cidr_block  = var.private_service_ranges.cluster
-    master_global_access    = true
-  }
+  private_cluster_config = var.private_cluster_config
 
   addons                 = var.gke_addons
   enable_shielded_nodes  = true
@@ -108,7 +104,9 @@ module "gke_cluster" {
 
 module "gke_cluster_nodepool" {
   source                     = "./modules/31-gke-nodepool"
-  for_each                   = var.gke_clusters
+  for_each = {
+    for k, v in var.gke_clusters : k => v if v.enable_autopilot == false # 조건식 추가
+  }
 
   name                       = "${each.key}-nodepool"
   project_id                 = module.landing_zone.project_ids_by_name[each.value.project_name]
@@ -124,9 +122,26 @@ module "gke_cluster_nodepool" {
 }
 
 /**
+module "gke_gateway" {
+  source = "./modules/32-gke-gateway" # 모듈 경로
+  gateway_name      = var.gke_gateway.gateway_name
+  gateway_namespace = var.gke_gateway.gateway_namespace
+  #tls_secret_name           = var.gke_gateway.tls_secret_name
+
+# 변수 추가 및 값 할당
+  k8s_host                   = "https://${module.gke_cluster["dev"].cluster_endpoint}"
+  k8s_token                  = data.google_client_config.default.access_token
+  k8s_ca_certificate         = module.gke_cluster["dev"].cluster_ca_certificate
+
+#  depends_on = [module.gke_cluster]
+}
+**/
+
 module "vm_bastion" {
-  source       = "./modules/32-compute-vm"
-  for_each     = var.gke_clusters
+  source       = "./modules/39-compute-vm"
+  for_each = {
+    for k, v in var.gke_clusters : k => v if var.private_cluster_config.enable_private_endpoint == true # 조건식 추가
+  }
 
   project_id   = module.landing_zone.project_ids_by_name[each.value.project_name]
   region       = each.value.region
@@ -153,8 +168,8 @@ module "vm_bastion" {
   shielded_config        = var.node_shielded_instance_config
   depends_on             = [module.service_vpcs]
 }
-**/
 
+/**
 module "helm-jenkins" {
   source            = "./modules/41-helm-jenkins"
 
@@ -167,6 +182,7 @@ module "helm-jenkins" {
   admin_user        = each.value.admin_user
   admin_password    = each.value.admin_password
 
+  depends_on = [module.gke_cluster]
 }
 
 module "helm-argocd" {
@@ -178,4 +194,20 @@ module "helm-argocd" {
   chart_version       = each.value.chart_version
   argocd_server_host  = "${each.key}-argocd-server-host"
 
+  depends_on = [module.gke_cluster]
 }
+
+module "helm-wordpress" {
+  source            = "./modules/43-helm-wordpress"
+
+  for_each          = var.helm_wordpress
+  release_name      = "${each.key}-wordpress"
+  namespace         = "${each.key}-wordpress-namespace"
+##  chart_version    = each.value.chart_version
+  admin_user        = each.value.admin_user
+  admin_password    = each.value.admin_password
+  db_password       = each.value.db_password
+
+  depends_on = [module.gke_cluster]
+}
+**/
