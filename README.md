@@ -34,6 +34,10 @@ project_id = "my-prod-project"
 region     = "us-east1"
 예시 (main.tf에서 TF_WORKSPACE 사용):
 
+
+terraform workspace select dev
+terraform init -reconfigure -backend-config="dev.tfbackend"
+
 Terraform
 
 # main.tf
