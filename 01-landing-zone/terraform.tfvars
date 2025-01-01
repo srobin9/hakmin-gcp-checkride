@@ -1,5 +1,6 @@
 org_id          = "497314095400"
 billing_account = "01ADFE-044C15-B43759"
+billing_project = "cs-host-b0532598bd5c475e8d3843"
 prefix          = "khm8"
 
 /*

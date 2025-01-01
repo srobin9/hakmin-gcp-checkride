@@ -28,16 +28,10 @@ variable "region" {
   default = "asia-northeast3" # 기본 리전 설정
 }
 
-variable "project_id" {
-  description = "Workload project id"
-  type = string
-}
-
 variable "project_name" {
   description = "Workload project name"
   type = string
 }
-
 
 variable "network_name" {
   description = "VPC network name"
