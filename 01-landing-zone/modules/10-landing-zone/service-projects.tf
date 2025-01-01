@@ -1,3 +1,15 @@
+module "service_groups" {
+  for_each = var.service_groups
+
+  source  = "terraform-google-modules/group/google"
+  version = "~> 0.6"
+
+  id            = each.value.id
+  display_name  = each.value.display_name
+  customer_id   = var.directory_customer_id
+  types         = each.value.types
+}
+
 module "service_project" {
   for_each = var.service_projects
 
@@ -17,6 +29,6 @@ module "service_project" {
  # ]
 
   domain      = var.org_domain
-  group_name  = module.cs-gg-service[each.value.group_key].name
+  group_name  = module.service_groups[each.value.group_key].name
   group_role  = "roles/viewer"
 }

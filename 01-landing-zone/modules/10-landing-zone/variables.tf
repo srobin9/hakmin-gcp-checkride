@@ -27,15 +27,7 @@ variable "directory_customer_id" {
 variable "org_domain" {
   description = "The organization domain for the associated resources"
   type        = string
-}
-
-variable "groups" {
-  description = "Group structure as a map"
-  type = map(object({
-    id          = string
-    display_name = string
-    types        = list(string)
-  }))
+  default     = "kimhakmin.altostart.com"
 }
 
 variable "shared_vpcs" {
@@ -67,6 +59,15 @@ variable "shared_firewall_rules" {
   }))
 }
 
+variable "service_groups" {
+  description = "Group structure as a map"
+  type = map(object({
+    id          = string
+    display_name = string
+    types        = list(string)
+  }))
+}
+
 variable "service_projects" {
   description = "Workload projects except common project"
   type = map(object({
@@ -76,15 +77,3 @@ variable "service_projects" {
     group_key       = string
   }))
 }
-
-/**
-variable "service_project_folder_names" {
-  description = "Folder names for the service projects"
-  type        = map(string)
-}
-
-variable "billing_project" {
-  description = "The project id to use for billing"
-  type        = string
-}
-**/

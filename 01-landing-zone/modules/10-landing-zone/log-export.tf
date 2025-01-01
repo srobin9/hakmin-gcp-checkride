@@ -20,7 +20,7 @@ module "cs-logging-destination" {
   version = "~> 8.0"
 
   project_id               = module.shared_project_module["central-logging-monitoring"].project_id
-  name                     = "kimhakmin.altostrat-logging"
+  name                     = "${var.org_domain}-logging"
   location                 = "global"
   retention_days           = 30
   log_sink_writer_identity = module.cs-logsink-logbucketsink.writer_identity

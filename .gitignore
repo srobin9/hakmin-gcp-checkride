@@ -1,1 +1,2 @@
 .terraform/
+01-landing-zone/.terraform.lock.hcl

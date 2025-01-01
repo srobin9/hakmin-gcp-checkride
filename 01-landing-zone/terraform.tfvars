@@ -1,6 +1,6 @@
 org_id          = "497314095400"
 billing_account = "01ADFE-044C15-B43759"
-prefix          = "khm5"
+prefix          = "khm8"
 
 /*
 The folder map is limited to three levels
@@ -16,7 +16,12 @@ folders = {
   "Development" : {},
 }
 
-groups = { 
+service_groups = { 
+  "gcp-developers" = {
+    id           = "gcp-developers@kimhakmin.altostrat.com"
+    display_name = "gcp-developers"
+    types        = ["default", "security"]
+  },
   "prod1" = {
     id           = "prod1-service@kimhakmin.altostrat.com"
     display_name = "prod1-service"
@@ -162,4 +167,19 @@ service_projects = {
     shared_vpc_key  = "shared-vpc-nonprod"
     group_key       = "dev"
   }  
+}
+
+org_policies = {
+  "storage_publicAccessPrevention" = {
+    constraint = "storage.publicAccessPrevention"
+  }
+  "sql_restrictPublicIp" = {
+    constraint = "sql.restrictPublicIp"
+  }
+  "compute_restrictXpnProjectLienRemoval" = {
+    constraint = "compute.restrictXpnProjectLienRemoval"
+  }
+  "compute_disableVpcExternalIpv6" = {
+    constraint = "compute.disableVpcExternalIpv6"
+  }
 }

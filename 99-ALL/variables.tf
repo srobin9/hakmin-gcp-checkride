@@ -1,8 +1,10 @@
+/**
 variable "billing_account" {
   description = "The ID of the billing account to associate projects with"
   type        = string
   default     = "01ADFE-044C15-B43759"
 }
+**/
 
 variable "org_id" {
   description = "The organization id for the associated resources"
@@ -20,6 +22,10 @@ variable "user_project_override" {
   description = "Whether to use user project override for the providers"
   type        = bool
   default     = true
+}
+
+variable "project_id" {
+  type = string
 }
 
 variable "region" {

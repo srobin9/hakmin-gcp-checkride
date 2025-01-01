@@ -39,7 +39,7 @@ variable "folders" {
   type        = map
 }
 
-variable "groups" {
+variable "service_groups" {
   description = "Group structure as a map"
   type = map(object({
     id          = string
@@ -85,4 +85,25 @@ variable "service_projects" {
     shared_vpc_key  = string
     group_key       = string
   }))
+}
+
+variable "org_policies" {
+  description = "Map of organization policies to enforce"
+  type = map(object({
+    constraint = string
+  }))
+  default = {
+    "storage_publicAccessPrevention" = {
+      constraint = "storage.publicAccessPrevention"
+    }
+    "sql_restrictPublicIp" = {
+      constraint = "sql.restrictPublicIp"
+    }
+    "compute_restrictXpnProjectLienRemoval" = {
+      constraint = "compute.restrictXpnProjectLienRemoval"
+    }
+    "compute_disableVpcExternalIpv6" = {
+      constraint = "compute.disableVpcExternalIpv6"
+    }
+  }
 }

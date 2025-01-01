@@ -3,22 +3,22 @@ locals {
     "nonprod-computeinstanceAdminv1" = {
       folder_id = local.folder_map["Non-Production"].id
       role      = "roles/compute.instanceAdmin.v1"
-      group     = "group:gcp-developers@kimhakmin.altostrat.com"
+      group     = "group:gcp-developers@${var.org_domain}"
     }
     "nonprod-containeradmin" = {
       folder_id = local.folder_map["Non-Production"].id
       role      = "roles/container.admin"
-      group     = "group:gcp-developers@kimhakmin.altostrat.com"
+      group     = "group:gcp-developers@${var.org_domain}"
     }
     "dev-computeinstanceAdminv1" = {
       folder_id = local.folder_map["Development"].id
       role      = "roles/compute.instanceAdmin.v1"
-      group     = "group:gcp-developers@kimhakmin.altostrat.com"
+      group     = "group:gcp-developers@${var.org_domain}"
     }
     "dev-containeradmin" = {
       folder_id = local.folder_map["Development"].id
       role      = "roles/container.admin"
-      group     = "group:gcp-developers@kimhakmin.altostrat.com"
+      group     = "group:gcp-developers@${var.org_domain}"
     }
   }
 }
@@ -42,37 +42,37 @@ locals {
     "logging-monitoring-loggingviewer" = {
       project_id = local.logging_monitoring_project_id
       role       = "roles/logging.viewer"
-      group      = "group:gcp-logging-monitoring-viewers@kimhakmin.altostrat.com"
+      group      = "group:gcp-logging-monitoring-viewers@${var.org_domain}"
     }
     "logging-monitoring-loggingprivateLogViewer" = {
       project_id = local.logging_monitoring_project_id
       role       = "roles/logging.privateLogViewer"
-      group      = "group:gcp-logging-monitoring-viewers@kimhakmin.altostrat.com"
+      group      = "group:gcp-logging-monitoring-viewers@${var.org_domain}"
     }
     "logging-monitoring-bigquerydataViewer" = {
       project_id = local.logging_monitoring_project_id
       role       = "roles/bigquery.dataViewer"
-      group      = "group:gcp-logging-monitoring-viewers@kimhakmin.altostrat.com"
+      group      = "group:gcp-logging-monitoring-viewers@${var.org_domain}"
     }
     "logging-monitoring-pubsubviewer" = {
       project_id = local.logging_monitoring_project_id
       role       = "roles/pubsub.viewer"
-      group      = "group:gcp-logging-monitoring-viewers@kimhakmin.altostrat.com"
+      group      = "group:gcp-logging-monitoring-viewers@${var.org_domain}"
     }
     "logging-monitoring-monitoringviewer" = {
       project_id = local.logging_monitoring_project_id
       role       = "roles/monitoring.viewer"
-      group      = "group:gcp-logging-monitoring-viewers@kimhakmin.altostrat.com"
+      group      = "group:gcp-logging-monitoring-viewers@${var.org_domain}"
     }
     "security-admins-bigquerydataViewer" = {
       project_id = local.logging_monitoring_project_id
       role       = "roles/bigquery.dataViewer"
-      group      = "group:gcp-security-admins@kimhakmin.altostrat.com"
+      group      = "group:gcp-security-admins@${var.org_domain}"
     }
     "security-admins-pubsubviewer" = {
       project_id = local.logging_monitoring_project_id
       role       = "roles/pubsub.viewer"
-      group      = "group:gcp-security-admins@kimhakmin.altostrat.com"
+      group      = "group:gcp-security-admins@${var.org_domain}"
     }
   }
 }
