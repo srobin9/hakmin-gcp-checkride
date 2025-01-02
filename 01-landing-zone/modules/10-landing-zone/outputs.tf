@@ -6,3 +6,10 @@ output "project_ids_by_name" {
     for key, project in module.service_project : project.project_name => project.project_id
   }
 }
+
+output "project_numbers_by_name" {
+  description = "A map from project names to project NUMBERs, for shared projects."
+  value = {
+    for key, project in module.service_project : project.project_name => project.project_number
+  }
+}
