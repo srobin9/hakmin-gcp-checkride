@@ -2,6 +2,7 @@ org_id          = "497314095400"
 billing_account = "01ADFE-044C15-B43759"
 billing_project = "cs-host-b0532598bd5c475e8d3843"
 
+project_name    = "development-service"
 region          = "asia-northeast3"
 network_name    = "vpc"
 

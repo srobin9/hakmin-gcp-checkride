@@ -1,8 +1,10 @@
+/**
 variable "billing_account" {
   description = "The ID of the billing account to associate projects with"
   type        = string
   default     = "01ADFE-044C15-B43759"
 }
+**/
 
 variable "org_id" {
   description = "The organization id for the associated resources"
@@ -22,7 +24,7 @@ variable "user_project_override" {
   default     = true
 }
 
-variable "project_name" {
+variable "project_id" {
   type = string
 }
 
@@ -32,10 +34,96 @@ variable "region" {
   default = "asia-northeast3" # 기본 리전 설정
 }
 
+variable "prefix" {
+  description = "The prefix to create project_id" 
+  type        = string
+  default     = "01ADFE-044C15-B43759"
+}
+
+variable "folders" {
+  description = "Folder structure as a map"
+  type        = map
+}
+
+variable "groups" {
+  description = "Group structure as a map"
+  type = map(object({
+    id          = string
+    display_name = string
+    types        = list(string)
+  }))
+}
+
+variable "shared_vpcs" {
+  type = map(object({
+    network_name = string
+    subnets      = list(object({
+      subnet_name               = string
+      subnet_ip                 = string
+      subnet_region             = string
+      subnet_private_access     = bool
+      subnet_flow_logs          = bool
+      subnet_flow_logs_sampling = string
+      subnet_flow_logs_metadata = string
+      subnet_flow_logs_interval = string
+    }))
+  }))
+}
+
+variable "shared_firewall_rules" {
+  type = list(object({
+    name      = string
+    direction = string
+    priority  = number
+    allow     = list(object({
+      protocol = string
+      ports    = list(string)
+    }))
+    ranges = list(string)
+  }))
+}
+
+variable "service_projects" {
+  description = "Workload projects except common project"
+  type = map(object({
+    name            = string
+    folder_name     = string
+    shared_vpc_key  = string
+    group_key       = string
+  }))
+}
+
+variable "net_vpcs" {
+  description = "VPC network configurations"
+  type = map(object({
+    project_name = string
+    network_name = string
+    subnets      = list(object({
+      subnet_ip           = string
+      subnet_name         = string
+      subnet_region       = string
+      secondary_ip_ranges = optional(map(string))
+      flow_logs_config    = optional(object({
+        flow_sampling         = number
+        aggregation_interval  = string
+      }))
+    }))
+  }))
+}
+
+variable "nat_region" {
+  description = "The region for cloud NAT" 
+  type        = string
+  default     = "asia-northeast3"
+}
+
 variable "gke_clusters" {
   description = "gke cluster configurations"
-  type = list(object({
+  type = map(object({
     gke_deletion_protection = bool #On version 5.0.0+ of the provider, you must explicitly set deletion_protection = false and run terraform apply to write the field to state in order to destroy a cluster.
+    project_name            = string
+    region                  = string
+    network_name            = string
     subnet_name             = string
     enable_autopilot        = bool
     gateway_channel         = string
@@ -47,6 +135,16 @@ variable "create_gke_cluster" {
   description = "Whether to create a GKE cluster"
   type        = bool
   default     = true
+}
+
+variable "gke_gateway" {
+  description = "gke gateway configurations"
+  type = map(string)
+  default = {
+    gateway_name      = "http-external"
+    gateway_namespace = "gke-gateway-namespace"
+  #  tls_secret_name   = ""
+  }
 }
 
 variable "node_machine_type" {
@@ -112,4 +210,32 @@ variable "gke_addons" {
     network_policy_config                 = false
     gce_persistent_disk_csi_driver_config = false
   }
+}
+
+variable "helm_jenkins" {
+  description = "Helm Jenkins configurations"
+  type = map(object({
+    chart_version     = string
+    ingress_enabled   = bool
+    ingress_host_name = string
+    admin_user        = string
+    admin_password    = string
+  }))
+}
+
+variable "helm_argocd" {
+  description = "Helm ArgoCD configurations"
+  type = map(object({
+    chart_version       = string
+  }))
+}
+
+variable "helm_wordpress" {
+  description = "Helm Wordpress configurations"
+  type = map(object({
+##    chart_version       = string
+    admin_user        = string
+    admin_password    = string
+    db_password       = string
+  }))
 }

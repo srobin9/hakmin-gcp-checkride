@@ -8,7 +8,6 @@ region          = "asia-northeast3"
 gke_clusters = [
   {
     gke_deletion_protection = false #On version 5.0.0+ of the provider, you must explicitly set deletion_protection = false and run terraform apply to write the field to state in order to destroy a cluster.
-    network_name            = "vpc"
     subnet_name             = "subnet-gke"
     enable_autopilot        = true
     gateway_channel         = "CHANNEL_STANDARD"

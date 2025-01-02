@@ -9,7 +9,7 @@ module "gke_cluster" {
   name                    = "${local.env}-gke-cluster-${each.key}"
   project_id              = data.terraform_remote_state.landing_zone.outputs.project_ids_by_name[var.project_name]
   location                = var.region
-  network                 = "${local.env}-${each.value.network_name}"
+  network                 = data.terraform_remote_state.service_network.outputs.vpc_names
   subnetwork              = each.value.subnet_name
   enable_autopilot        = each.value.enable_autopilot
   gateway_channel         = each.value.gateway_channel
@@ -58,7 +58,7 @@ module "vm_bastion" {
   region       = var.region
   name         = "${local.env}-bastion-${each.key}"
   network_interfaces = [{
-    network    = "${local.env}-${each.value.network_name}"
+    network    = data.terraform_remote_state.service_network.outputs.vpc_names
     subnetwork = "subnet-general"
     nat        = false
     addresses  = null
