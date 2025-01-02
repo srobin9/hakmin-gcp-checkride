@@ -11,7 +11,7 @@ output "namespace" {
 }
 
 # modules/jenkins-helm/outputs.tf
- output "helm_jenkins_metadata" {
+ output "jenkins_meatadata" {
      description = "metadata object output of helm"
      value = helm_release.jenkins.metadata
  }

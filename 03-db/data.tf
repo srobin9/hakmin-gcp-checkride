@@ -3,17 +3,17 @@ data "google_organization" "org" {
 }
 
 data "terraform_remote_state" "landing_zone" {
-  backend = "gcs" # Project A와 동일한 백엔드 타입
-  config = {
+  backend = "gcs"
+  config  = {
     bucket = "khm-tfstate-asia-northeast3-ca8e883247484090b411d314eeb5983e"
     prefix = "terraform/01-landingzone/"  }
 }
 
-data "terraform_remote_state" "gke_clusters" {
+data "terraform_remote_state" "service_network" {
   backend   = "gcs" 
   workspace = "${local.env}" #workspace 사용 시 반드시 추가해야 되는 옵션
   config    = {
     bucket = "khm-tfstate-asia-northeast3-ca8e883247484090b411d314eeb5983e"
-    prefix = "terraform/03-gke/"  
+    prefix = "terraform/02-service-network/"  
   }
 }
