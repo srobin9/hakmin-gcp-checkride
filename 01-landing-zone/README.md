@@ -1,6 +1,6 @@
+반드시 실행은 terrform host project에서 수행하여야 함. 
+
 # Google Cloud Foundation Blueprint
-
-
 This repository contains Terraform configuration files based on Google Cloud best practices to deploy a foundational environment on Google Cloud.  It provisions resources adhering to the recommendations outlined in the [setup checklist](https://cloud.google.com/docs/enterprise/setup-checklist).  For a complete set of instructions, please refer to the [official deployment guide](https://cloud.google.com/docs/enterprise/deploy-foundation-using-terraform-from-console)
 
 

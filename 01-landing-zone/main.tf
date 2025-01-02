@@ -24,7 +24,12 @@ module "service_project_apis" {
     "container.googleapis.com", # Kubernetes Engine API
     "compute.googleapis.com",
     "cloudresourcemanager.googleapis.com",
-    "dns.googleapis.com"
+    "dns.googleapis.com",
+  /**
+    "cloudidentity.googleapis.com",
+    "serviceusage.googleapis.com",
+    "logging.googleapis.com"
+  **/
   ]
 
   disable_dependent_services = true

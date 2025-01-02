@@ -13,6 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+variable "ip_range_name" {
+  type = string
+  default = "alloydb-ip-range"
+}
+variable "ip_prefix_length" {
+  type = number
+  default = 16
+}
 
 variable "annotations" {
   description = "Map FLAG_NAME=>VALUE for annotations which allow client tools to store small amount of arbitrary data."

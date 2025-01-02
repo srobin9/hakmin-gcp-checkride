@@ -54,3 +54,13 @@ variable "terraform_deletion_protection" {
   type        = bool
   default     = false
 }
+
+variable "alloydb_ip_range_name" {
+  type = string
+  default = "alloydb-ip-range"
+}
+
+variable "alloydb_ip_prefix_length" {
+  type = number
+  default = 16
+}

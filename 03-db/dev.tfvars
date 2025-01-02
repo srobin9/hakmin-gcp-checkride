@@ -9,3 +9,6 @@ database_version              = "MYSQL_8_0"
 tier                          = "db-g1-small"
 gcp_deletion_protection       = false
 terraform_deletion_protection = false
+
+alloydb_ip_range_name = "alloydb-ip-range"
+alloydb_ip_prefix_length = 16

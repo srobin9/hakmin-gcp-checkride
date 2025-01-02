@@ -39,7 +39,26 @@ locals {
   }
 }
 
+# VPC Peering 생성
+resource "google_service_networking_connection" "alloydb_vpc_peering" {
+  network                 = var.network_config.psa_config.network
+  service                 = "servicenetworking.googleapis.com"
+  reserved_peering_ranges = [google_compute_global_address.alloydb_private_ip_alloc.name]
+}
+
+resource "google_compute_global_address" "alloydb_private_ip_alloc" {
+  provider      = google-beta
+  name          = var.ip_range_name
+  purpose       = "VPC_PEERING"
+  address_type  = "INTERNAL"
+  prefix_length = var.ip_prefix_length
+  network       = var.network_config.psa_config.network
+  project       = var.project_id
+}
+
 resource "google_alloydb_cluster" "primary" {
+  depends_on = [google_service_networking_connection.alloydb_vpc_peering]
+
   project          = var.project_id
   annotations      = var.annotations
   cluster_id       = local.primary_cluster_name
@@ -162,6 +181,8 @@ resource "google_alloydb_cluster" "primary" {
 }
 
 resource "google_alloydb_instance" "primary" {
+  depends_on = [google_service_networking_connection.alloydb_vpc_peering]
+
   annotations       = var.annotations
   availability_type = var.availability_type
   cluster           = google_alloydb_cluster.primary.id
