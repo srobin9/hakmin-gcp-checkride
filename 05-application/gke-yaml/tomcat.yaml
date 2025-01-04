@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tomcat-deployment
+  labels:
+    app: tomcat
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: tomcat
+  template:
+    metadata:
+      labels:
+        app: tomcat
+    spec:
+      containers:
+        - name: tomcat
+          image: gcr.io/p-khm8-dev-svc/tomcat-with-jdbc:latest  # 커스텀 이미지 사용
+          ports:
+            - containerPort: 8080
+          env:
+            - name: DB_CONNECTION_URI
+              value: "projects/p-khm8-dev-svc/locations/asia-northeast3/clusters/dev-alloydb-cluster/instances/dev-alloydb-intance"
+            - name: DB_PRIVATE_IP
+              value: "10.140.0.2:5432"
+            - name: DB_USER
+              value: "postgres"
+            - name: DB_PASSWORD
+              value: "postgres1234"
+            - name: DB_NAME
+              value: "postgres"
+          volumeMounts:
+            - mountPath: /usr/local/tomcat/webapps
+              name: tomcat-webapps
+        - name: alloydb-auth-proxy
+          image: gcr.io/alloydb-connectors/alloydb-auth-proxy:latest
+          command:
+            - "/alloydb-auth-proxy"
+          args:
+            - "projects/p-khm8-dev-svc/locations/asia-northeast3/clusters/dev-alloydb-cluster/instances/dev-alloydb-intance"
+          securityContext:
+            runAsUser: 2
+            allowPrivilegeEscalation: false
+          resources:
+            limits:
+              cpu: "1"
+              memory: "256Mi"
+      volumes:
+        - name: tomcat-webapps
+          emptyDir: {}
+        - name: dbcheck-config
+          configMap:
+            name: dbcheck-config
+      initContainers:
+      - name: init-webapp
+        image: busybox:latest
+        command: ["sh", "-c"]
+        args:
+          - |        
+            mkdir -p /webapps/ROOT &&
+            echo "<!DOCTYPE html><html><head><title>Tomcat Health Check</title></head><body><h1>Tomcat is running</h1></body></html>" > /webapps/ROOT/index.html &&
+            cp /config/dbcheck.jsp /webapps/ROOT/dbcheck.jsp
+        volumeMounts:
+          - name: tomcat-webapps
+            mountPath: /webapps
+          - name: dbcheck-config
+            mountPath: /config
+        resources:
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+          requests:
+            cpu: "250m"
+            memory: "256Mi"

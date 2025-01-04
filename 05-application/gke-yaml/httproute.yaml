@@ -1,0 +1,25 @@
+kind: HTTPRoute
+apiVersion: gateway.networking.k8s.io/v1beta1
+metadata:
+  name: nginx-route
+  namespace: default  # 네임스페이스 명시
+spec:
+  parentRefs:
+  - kind: Gateway
+    name: external-http
+#    namespace: gke-gateway-system  # Gateway 네임스페이스 추가
+  rules:
+  - matches: # 첫 번째 규칙에 matches 추가
+    - path:
+        type: PathPrefix
+        value: /
+    backendRefs:
+    - port: 80
+      name: nginx-service
+  - matches: # 두 번째 규칙
+    - path:
+        type: PathPrefix
+        value: /httpd
+    backendRefs:
+    - port: 80
+      name: httpd-service

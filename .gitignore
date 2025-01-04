@@ -1,3 +1,4 @@
 .terraform/
 01-landing-zone/.terraform.lock.hcl
+03-db/.terraform.lock.hcl
 .DS_Store

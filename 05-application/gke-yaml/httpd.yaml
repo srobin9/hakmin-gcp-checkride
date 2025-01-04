@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: httpd-service
+  annotations:
+    cloud.google.com/neg: '{"ingress": true}'
+spec:
+  selector:
+    app: httpd
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: httpd-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: httpd
+  template:
+    metadata:
+      labels:
+        app: httpd
+    spec:
+      containers:
+        - name: httpd-container
+          image: php:7.4-apache # php 이미지 사용
+          command: ["/bin/bash", "-c"]
+          args: ["echo 'Hello, this is /httpd path' > /usr/local/apache2/htdocs/httpd; apachectl -D FOREGROUND"]
+#          args:
+#            [
+#              "apt-get update && apt-get install -y libpq-dev && docker-php-ext-install pdo pdo_pgsql && mkdir -p /usr/local/apache2/htdocs/httpd && echo 'Hello, this is /httpd path, and I can connect to AlloyDB!' > /usr/local/apache2/htdocs/httpd/index.html; echo '<?php phpinfo(); ?>' > /usr/local/apache2/htdocs/httpd/index.php; echo '<?php $dbconn = pg_connect(\"host=10.140.0.2 port=5432 dbname=postgres user=postgres password=postgres1234\"); var_dump($dbconn); ?>' > /usr/local/apache2/htdocs/httpd/db.php; sed -i 's|DocumentRoot /usr/local/apache2/htdocs|DocumentRoot /usr/local/apache2/htdocs/httpd|' /usr/local/apache2/conf/httpd.conf; sed -i 's|/usr/local/apache2/htdocs/httpd|/usr/local/apache2/htdocs/httpd|' /usr/local/apache2/conf/httpd.conf; sed -i 's|AllowOverride None|AllowOverride All|' /usr/local/apache2/conf/httpd.conf; apachectl -D FOREGROUND",
+#            ]
+          ports:
+            - containerPort: 80
