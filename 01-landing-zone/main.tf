@@ -15,42 +15,29 @@ module "landing_zone" {
 module "service_project_apis" {
   source  = "terraform-google-modules/project-factory/google//modules/project_services"
   version = "~> 16.0"
-
   for_each = var.service_projects
-
   project_id = module.landing_zone.project_ids_by_name[each.value.name]
-
   activate_apis = [
     "container.googleapis.com", # Kubernetes Engine API
     "compute.googleapis.com",
     "cloudresourcemanager.googleapis.com",
     "dns.googleapis.com",
-  /**
-    "cloudidentity.googleapis.com",
-    "serviceusage.googleapis.com",
-    "logging.googleapis.com"
-  **/
   ]
-
   disable_dependent_services = true
   disable_services_on_destroy = false
-
   depends_on = [module.landing_zone]
 }
 
 module "org_policy" {
   for_each = var.org_policies
-
   source = "terraform-google-modules/org-policy/google//modules/org_policy_v2"
   version = "~> 5.2"
-
   policy_root      = "organization"
   policy_root_id   = var.org_id
   constraint       = each.value.constraint
   policy_type      = "boolean"
   exclude_folders  = []
   exclude_projects = []
-
   rules = [
     {
       enforcement = true
@@ -59,6 +46,5 @@ module "org_policy" {
       conditions  = []
     },
   ]
-
   depends_on = [module.landing_zone]
 }

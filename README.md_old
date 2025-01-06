@@ -1,0 +1,219 @@
+
+## Prerequisites
+
+Before using this Terraform project, ensure that you have the following:
+
+*   A GCP project with billing enabled.
+*   Terraform CLI installed and configured.
+*   Proper authentication and authorization to manage GCP resources.
+*   A GKE Autopilot cluster created by `04-gke` terraform project.
+*  The custom Tomcat Image has been pushed to artifact registry.
+* AlloyDB instance provisioned by `03-db` terraform project
+
+## Usage
+
+### Initialization
+
+1.  Navigate to the project directory.
+    ```bash
+    cd 06-application
+    ```
+2.  Initialize Terraform.
+    ```bash
+    terraform init
+    ```
+
+### Configuration
+
+1.  Review and modify the `terraform.tfvars` file with your specific settings, such as:
+    *   `project_id`: The GCP project ID.
+    *   `region`: The GCP region.
+    *   `gateway_namespace`: The namespace for the GKE Gateway.
+     *  `app_namespace`: The namespace for Tomcat deployment and HTTPRoute
+    * `db_connection_uri` : The connection string of AlloyDB
+    * `db_private_ip`: The private ip of AlloyDB for connection
+    *  `db_user`: The username for AlloyDB connection
+    *  `db_password`: The password for AlloyDB connection
+    * `db_name`: The database name for AlloyDB connection
+2.  Optionally, customize the `variables.tf` file to change any of the variable defaults.
+
+### Deployment
+
+1.  Plan your changes:
+    ```bash
+    terraform plan -var-file="terraform.tfvars"
+    ```
+2.  Apply the changes:
+    ```bash
+    terraform apply -var-file="terraform.tfvars"
+    ```
+
+### Post-Deployment Steps
+
+1.  Verify that the GKE Gateway and HTTPRoute have been successfully created in your GKE cluster.
+2.  Verify that the Tomcat application is running and accessible via the GKE Gateway's external IP.
+3.  Access `/dbcheck.jsp` endpoint of Tomcat application to verify the database connection is successful.
+
+## Dependencies
+
+This project depends on the successful deployment of the `01-landing-zone`, `02-service-network`, `03-db` and `04-gke` Terraform projects, which set up the shared VPC, AlloyDB instance, and GKE Autopilot cluster respectively.
+
+## Variables
+
+The following variables can be configured in the `terraform.tfvars` file:
+
+*   `project_id` (Required): The GCP project ID.
+*    `region` (Optional, default: `asia-northeast3`): The GCP region for the GKE cluster.
+*    `gateway_namespace` (Optional, default: `gke-gateway-namespace`): The namespace for the GKE Gateway.
+    *   `app_namespace` (Optional, default: `default`): The namespace for the Tomcat deployment and HTTPRoute.
+* `db_connection_uri` (Required): The AlloyDB instance connection name.
+*  `db_private_ip` (Required): The Private IP address and Port of AlloyDB instance.
+*   `db_user` (Required): The username to connect AlloyDB.
+*  `db_password` (Required): The password to connect AlloyDB.
+*    `db_name` (Required): The database name to connect AlloyDB.
+
+## Important Considerations
+
+*   **GKE Gateway:** This project assumes that a GKE Gateway is used for external load balancing and traffic management.
+*   **Application Deployment:** Ensure that the container image for Tomcat is available in the specified image registry.
+*   **Database Connection:** Configure database connection settings via environment variables.
+*   **Health Checks:** Configure GKE Load Balancer health check for the Tomcat application.
+
+## Troubleshooting
+
+*   **Error: Insufficient Permissions:** Ensure that your service account has the correct permissions to create and manage GKE resources.
+*   **Error: Invalid Parameters:** Double-check the values set in your `terraform.tfvars` file to make sure all parameters are set correctly.
+*   **Connection Issues:** Verify that your network configuration and application settings allow your app to connect to AlloyDB correctly.
+ * If you encounter a `dependency error` ensure that you deploy `01-landing-zone`, `02-service-network`, `03-db` and `04-gke` before deploying `06-application`.
+* Please check the Terraform log to find more accurate error message.
+
+## Support
+
+If you encounter any issues or have any questions, please contact the infrastructure team.
+
+
+
+
+
+teraform으로 프로비저닝하는 단계를 크게 4가지로 구분함. 동시에 모든 것을 했을 때 인증 문제가 발생하는게 가장 큰 요인이고, 코드가 길어지다 보니 사소한 변경이 있을 때 전체를 모두 돌릴 때 시간이 걸리는 이슈도 한 몫함.
+
+01-landing-zone
+빌링 계정과 Org ID만 발급 받은 상태에서 거버넌스 및 컴플라이언스에 필요한 프로젝트들과 베이스라인을 설정해줌. 
+테라폼 상태 정보를 원격에서 관리하기 위해 GCS bucket이 필요함. GCK bucket을 가지고 테라폼을 수행할 Host project는 별도로 생성한 후 테라폼을 실행해야 함
+backend.tf에 테라폼 상태 정보를 저장하는 GCS Bucket을 적어두고, 변수 값에 Org ID와 빌링 계정 정보를 입력한 후 테라폼 프로비저닝.
+기존 폴더 구조는 아래와 같이 만들어짐
+<img width="326" alt="Screenshot 2025-01-01 at 11 23 12 AM" src="https://github.com/user-attachments/assets/4d64ffb6-e453-4156-a02b-e96dd900c4be" />
+Common 폴더에는 central logging monitoring 프로젝트와 논프로덕션용 Shared vpc 프로젝트, production용 shared 프로젝트가 생성됨. 
+각 
+
+이후부터는 project별로 워크스페이스를 구분하여 사용함
+워크스페이스 생성
+```bash
+terraform workspace new <project_name>
+```
+워크스페이스 목록 확인
+```bash
+terraform workspace list
+```
+워크스페이스 선택
+```bash
+terraform workspace select <project_name>
+```
+워크스페이스별로 다른 변수 값을 사용하려면 terraform.tfvars 파일을 워크스페이스 이름으로 구분하여 생성합니다. (예: dev.tfvars, staging.tfvars, prod.tfvars)
+또는, TF_WORKSPACE 환경 변수를 사용하여 조건부 변수 할당을 할 수 있습니다.
+예시 (dev.tfvars, prod.tfvars):
+
+# dev.tfvars
+project_id = "my-dev-project"
+region     = "us-central1"
+# prod.tfvars
+project_id = "my-prod-project"
+region     = "us-east1"
+예시 (main.tf에서 TF_WORKSPACE 사용):
+
+
+terraform workspace select dev
+terraform init -reconfigure -backend-config="dev.tfbackend"
+
+Terraform
+
+# main.tf
+
+locals {
+  env = terraform.workspace
+}
+
+resource "google_storage_bucket" "bucket" {
+  name = "my-bucket-${local.env}" # 워크스페이스 이름에 따라 다른 버킷 이름 사용
+}
+6. 워크스페이스별 백엔드 구성 (권장):
+
+각 워크스페이스의 상태 파일을 서로 다른 위치에 저장하려면, 백엔드 구성을 워크스페이스별로 다르게 설정해야 합니다.
+terraform init 시 -backend-config 옵션을 사용하거나, terraform 블록 내에서 조건부 백엔드 구성을 사용할 수 있습니다.
+예시 (terraform 블록 내 조건부 백엔드 구성):
+
+Terraform
+
+# main.tf
+
+terraform {
+  backend "gcs" {
+    bucket = "my-tfstate-bucket"                  # 상태 파일을 저장할 버킷
+    prefix = "terraform/state/${terraform.workspace}" # 워크스페이스별로 상태 파일 경로 구분
+  }
+}
+7. 워크스페이스 삭제:
+
+terraform workspace delete 명령어를 사용하여 워크스페이스를 삭제합니다.
+
+Bash
+
+terraform workspace delete <workspace_name>
+주의: 워크스페이스를 삭제하기 전에, 해당 워크스페이스에 속한 리소스를 모두 삭제해야 합니다.
+
+워크스페이스 사용 예시:
+
+워크스페이스 생성:
+
+Bash
+
+terraform workspace new dev
+terraform workspace new prod
+dev 워크스페이스 선택:
+
+Bash
+
+terraform workspace select dev
+dev.tfvars 파일 생성 및 변수 값 설정:
+
+# dev.tfvars
+project_id = "my-dev-project"
+region     = "us-central1"
+terraform apply 실행:
+
+Bash
+
+terraform apply -var-file="dev.tfvars"
+prod 워크스페이스 선택:
+
+Bash
+
+terraform workspace select prod
+prod.tfvars 파일 생성 및 변수 값 설정:
+
+# prod.tfvars
+project_id = "my-prod-project"
+region     = "us-east1"
+terraform apply 실행:
+
+Bash
+
+terraform apply -var-file="prod.tfvars"
+추가 팁:
+
+terraform.workspace 변수를 사용하여 현재 선택된 워크스페이스 이름을 참조할 수 있습니다.
+terraform workspace show 명령어를 사용하여 현재 선택된 워크스페이스 이름을 확인할 수 있습니다.
+워크스페이스를 사용하면 동일한 Terraform 구성을 사용하여 여러 환경을 쉽게 관리할 수 있습니다.
+워크스페이스별로 다른 백엔드 구성을 사용하면 상태 파일을 안전하게 분리하여 관리할 수 있습니다.
+
+02-service

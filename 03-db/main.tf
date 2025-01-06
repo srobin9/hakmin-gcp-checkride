@@ -2,7 +2,6 @@ locals {
   env = terraform.workspace
 }
 
-
 resource "google_project_service" "service_networking_api" {
   project = data.terraform_remote_state.landing_zone.outputs.project_ids_by_name[var.project_name]
   service = "servicenetworking.googleapis.com"
@@ -14,20 +13,21 @@ module "alloydb" {
   project_id     = data.terraform_remote_state.landing_zone.outputs.project_ids_by_name[var.project_name]
   project_number = data.terraform_remote_state.landing_zone.outputs.project_numbers_by_name[var.project_name]
   cluster_name   = "${local.env}-alloydb-cluster"
+
   ip_range_name   = var.alloydb_ip_range_name
   ip_prefix_length = var.alloydb_ip_prefix_length
+
   network_config = {
     psa_config = {
       network = data.terraform_remote_state.service_network.outputs.vpc_ids
     }
   }
+
   instance_name = "${local.env}-alloydb-intance"
   location      = var.region
 
   depends_on = [google_project_service.service_networking_api]
 }
-
-# tftest modules=3 resources=16 inventory=simple.yaml e2e
 
 /**
 module "cloudsql" {
