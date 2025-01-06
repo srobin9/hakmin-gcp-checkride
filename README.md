@@ -36,6 +36,7 @@ region     = "us-east1"
 
 
 terraform workspace select dev
+
 terraform init -reconfigure -backend-config="dev.tfbackend"
 
 Terraform
