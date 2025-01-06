@@ -27,7 +27,7 @@ This project uses a Terraform module and additional resources organized as follo
 
 The project's root directory contains the following files:
 
-*   **`main.tf`:** This file contains the main Terraform configuration. It uses local variables and data sources, and invokes modules to perform the resource creation based on variables provided. It uses output from `03-db` to retrieve database information and `04-gke` to get cluster details.
+*   **`main.tf`:** This file contains the main Terraform configuration. It uses local variables and data sources, and invokes modules to perform the resource creation based on variables provided. It uses output from `03-db` to retrieve database information and `03-gke` to get cluster details.
 *   **`data.tf`:** This file defines data sources used in the project.
 *   **`outputs.tf`:** This file defines the outputs of the Terraform module, enabling data sharing with other projects if needed.
 *   **`backend.tf`:** This file specifies the GCS bucket where the Terraform state will be stored for remote state management.
@@ -43,7 +43,7 @@ Before using this Terraform project, ensure that you have the following:
 *   A GCP project with billing enabled.
 *   Terraform CLI installed and configured.
 *   Proper authentication and authorization to manage GCP resources.
-*   A GKE Autopilot cluster created by the `04-gke` Terraform project.
+*   A GKE Autopilot cluster created by the `03-gke` Terraform project.
 *   The AlloyDB instance created by the `03-db` Terraform project.
 *   A custom Tomcat image pushed to the artifact registry using the `Dockerfile` in the `./docker` folder.
 
