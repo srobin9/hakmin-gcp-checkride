@@ -11,7 +11,7 @@ This project focuses on creating and managing database resources in GCP, providi
 *   **AlloyDB Cluster:** Creates AlloyDB clusters within a designated region and network.
 *   **AlloyDB Instance:** Configures AlloyDB instances within the created cluster, specifying machine types, and other settings.
 *   **Cloud SQL Instance:** (Currently commented out) Allows for the creation of Cloud SQL instances within a designated service project.
-*  **Connection Management:** Handles the database connection settings with private IP.
+*   **Connection Management:** Handles the database connection settings with private IP.
 
 ### Architecture
 
@@ -22,14 +22,14 @@ This project uses multiple Terraform modules located in the `./modules` director
 
 The project's root directory contains the following files:
 
-*   **`main.tf`:** This file contains the main Terraform configuration. It uses local variables and data sources, and invokes modules to perform the resource creation based on variables provided.
+*   **`main.tf`:** This file contains the main Terraform configuration. It uses local variables and data sources, and invokes modules to perform the resource creation based on variables provided. It uses output from `01-landing-zone` to retrieve project ids based on their names and uses output from `02-service-network` to retrieve networking information.
 *   **`data.tf`:** This file defines data sources used in the project.
 *   **`outputs.tf`:** This file defines the outputs of the Terraform module, enabling data sharing with other projects if needed.
 *   **`backend.tf`:** This file specifies the GCS bucket where the Terraform state will be stored for remote state management.
 *   **`providers.tf`:** This file defines the Google provider and other required provider configurations.
 *   **`variables.tf`:** This file defines variables that allow customization of the resources, such as the GCP region, project id, database names and connection details.
-*  **`versions.tf`**: This file defines provider versions to enforce specific provider version.
-*   **`dev.tfvars`:** This is a sample variable file for the `dev` Terraform workspace to set custom variable values. The actual file name should be set to the current workspace name (e.g., `staging.tfvars` for a `staging` workspace).
+*   **`versions.tf`**: This file defines provider versions to enforce specific provider version.
+*   **`<workspace_name>.tfvars`:** This file (e.g., `dev.tfvars` for a `dev` workspace) is used to set custom variable values for the selected Terraform workspace.
 
 ## Prerequisites
 
@@ -57,21 +57,21 @@ Before using this Terraform project, ensure that you have the following:
 
 ### Configuration
 
-1. Create a workspace:
+1.  Create a workspace:
     ```bash
     terraform workspace new <workspace_name>
     ```
-2. Select a workspace:
+2.  Select a workspace:
     ```bash
     terraform workspace select <workspace_name>
     ```
-3. Review and modify the `<workspace_name>.tfvars` file with your specific settings, such as:
-    *   `project_id`: The GCP project ID.
+3.  Review and modify the `<workspace_name>.tfvars` file with your specific settings, such as:
+    *   `project_name`: The name of the GCP project, this value is used to look up project ID from 01-landing-zone output.
     *   `region`: The GCP region.
     *   `alloydb_cluster_name`: The name of the AlloyDB cluster.
     *   `alloydb_instance_name`: The name of the AlloyDB instance.
     *   `machine_type`: The machine type for the AlloyDB instance.
-    *    `authorized_network`: The self link of service VPC for AlloyDB to use private ip.
+    *  `authorized_network`: The self link of service VPC for AlloyDB to use private ip which is retrieved by 02-service-network.
    *  **Cloud SQL (optional):**
      * To use Cloud SQL, uncomment the `31-cloudsql-instance` module and configure variables for cloud sql.
 4.  Optionally, customize the `variables.tf` file to change any of the variable defaults.
@@ -82,12 +82,12 @@ Before using this Terraform project, ensure that you have the following:
     ```bash
     terraform plan -var-file="<workspace_name>.tfvars"
     ```
-       * Make sure you specify your current workspace's tfvars file (e.g. `dev.tfvars`)
+    * Make sure you specify your current workspace's tfvars file (e.g. `dev.tfvars`)
 2.  Apply the changes:
     ```bash
     terraform apply -var-file="<workspace_name>.tfvars"
     ```
-       *  Make sure you specify your current workspace's tfvars file (e.g. `dev.tfvars`)
+     * Make sure you specify your current workspace's tfvars file (e.g. `dev.tfvars`)
 
 ### Post-Deployment Steps
 
@@ -96,34 +96,36 @@ Before using this Terraform project, ensure that you have the following:
 
 ## Dependencies
 
-This project depends on the successful deployment of the `01-landing-zone` and `02-service-network` Terraform projects, which set up the shared VPC and required networking.
+This project depends on the successful deployment of the `01-landing-zone` and `02-service-network` Terraform projects. This project uses output from `01-landing-zone` to retrieve project id based on the `project_name` variable and uses output from `02-service-network` to retrieve network information.
 
 ## Variables
 
 The following variables can be configured in a `<workspace_name>.tfvars` file (e.g. `dev.tfvars`, `prod.tfvars` etc.):
 
-*   `project_id` (Required): The GCP project ID.
+*   `project_name` (Required): The name of the GCP project, which is used to retrieve the project ID from 01-landing-zone output.
 *   `region` (Optional, default: `asia-northeast3`): The GCP region for the database resources.
 *   `alloydb_cluster_name` (Optional, default: `alloydb-cluster`): The name of the AlloyDB cluster.
 *   `alloydb_instance_name` (Optional, default: `alloydb-instance`): The name of the AlloyDB instance.
 *   `machine_type` (Optional, default: `db-standard-2`): The machine type for the AlloyDB instance.
-*   `authorized_network` (Required): The self link of service VPC for AlloyDB to use private ip.
+*    `authorized_network` (Required): The self link of service VPC for AlloyDB to use private ip, which is from `02-service-network` output.
  *   **Cloud SQL (optional):**
-       * To enable Cloud SQL configuration, review and configure variables like: `cloudsql_instance_name`, `database_version`, `machine_type`, `region`, etc. You should uncomment the `31-cloudsql-instance` module call in `main.tf`
+       *  To enable Cloud SQL configuration, review and configure variables like: `cloudsql_instance_name`, `database_version`, `machine_type`, `region`, etc. You should uncomment the `31-cloudsql-instance` module call in `main.tf`.
 
 ## Important Considerations
 
 *   **Private IP:** Make sure private IP is enabled in order to connect to the AlloyDB or CloudSQL.
 *   **Machine Type:** Choose the machine type that meets the performance requirements for your workloads.
 *   **Region:** The chosen region should be aligned with your other GCP resources for optimal performance.
-*   **VPC Network:** The service project should be associated with shared VPC and set in `authorized_network` variable.
-* **Terraform Workspaces:** This project uses Terraform workspaces for managing different environments. Ensure you have selected the correct workspace before deployment.
-*  **Cloud SQL:** Please note that Cloud SQL module is currently commented out. Uncomment the module in `main.tf` file to deploy cloud SQL instead of AlloyDB.
+*   **VPC Network:** The service project should be associated with a Shared VPC, and specified in the `authorized_network` variable. The network information will be retrieved from `02-service-network` output.
+*   **Terraform Workspaces:** This project uses Terraform workspaces for managing different environments. Ensure you have selected the correct workspace before deployment.
+*   **Cloud SQL:** Please note that the Cloud SQL module is currently commented out. Uncomment the module in `main.tf` file to deploy cloud SQL instead of AlloyDB.
+* **Dependency:** This project depends on `01-landing-zone` and `02-service-network` projects.
+
 ## Troubleshooting
 
 *   **Error: Insufficient Permissions:** Ensure that your service account has the correct permissions to create and manage database resources.
 *   **Error: Invalid Parameters:** Double-check the values set in your `<workspace_name>.tfvars` file to make sure all parameters are set correctly.
-*  **Connection Issues:** Verify that your network configuration and private IP settings allow you to connect to the AlloyDB or Cloud SQL database using internal ip addresses.
+*   **Connection Issues:** Verify that your network configuration and private IP settings allow you to connect to the AlloyDB or Cloud SQL database using internal ip addresses.
 *  If you encounter a `dependency error` ensure that you deploy `01-landing-zone` and `02-service-network` before deploying `03-db`.
 * Please check the Terraform log to find more accurate error messages.
 
