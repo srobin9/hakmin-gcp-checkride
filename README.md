@@ -269,7 +269,7 @@ Each project has specific dependencies. Please see the individual README.md file
 
 ## References
 * [Google Cloud Foundation Fabric](https://github.com/GoogleCloudPlatform/cloud-foundation-fabric/blob/master/README.md)
-* [Terraform Google Provider](https://www.google.com/url?sa=E&q=https%3A%2F%2Fregistry.terraform.io%2Fproviders%2Fhashicorp%2Fgoogle%2Flatest%2Fdocs)
+* [Terraform Google Provider](https://registry.terraform.io/providers/hashicorp/google/latest/docs)
   
 ## Support
 If you encounter any issues or have any questions, please contact the <kimhakmin@google.com>.
