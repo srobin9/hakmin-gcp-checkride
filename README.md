@@ -130,9 +130,9 @@ Before deploying this repository, ensure that you have the following:
     *   This project provisions AlloyDB instances (or Cloud SQL instances if the module is uncommented) within the networking configurations set up by `02-service-network`.
     * Use workspace to deploy databases for different environments (e.g. create 'dev' workspace to create databases for development environment)
 
-### Stage 4: Setting Up Kubernetes (04-gke)
+### Stage 4: Setting Up Kubernetes (03-gke)
 
-1.  Navigate to the `04-gke` directory.
+1.  Navigate to the `03-gke` directory.
     ```bash
     cd 04-gke
     ```
@@ -153,11 +153,11 @@ Before deploying this repository, ensure that you have the following:
     *   This project provisions a GKE Autopilot or Standard cluster.
     *   Use workspace to deploy GKE clusters for different environments (e.g. create 'dev' workspace to create a development GKE cluster)
 
-### Stage 5: Deploying CI/CD Tools (05-helm)
+### Stage 5: Deploying CI/CD Tools (04-helm)
 
-1.  Navigate to the `05-helm` directory.
+1.  Navigate to the `04-helm` directory.
     ```bash
-    cd 05-helm
+    cd 04-helm
     ```
 2.  Create a workspace:
     ```bash
@@ -176,11 +176,11 @@ Before deploying this repository, ensure that you have the following:
     *   This project deploys applications like Jenkins and ArgoCD using Helm.
     *   Use workspace to deploy Jenkins and ArgoCD for different environments (e.g. create 'dev' workspace to create a CI/CD tool for development environment)
 
-### Stage 6: Deploying the Application (06-application)
+### Stage 6: Deploying the Application (05-application)
 
-1.  Navigate to the `06-application` directory.
+1.  Navigate to the `05-application` directory.
     ```bash
-    cd 06-application
+    cd 05-application
     ```
 2.  Create a workspace:
     ```bash
