@@ -23,7 +23,7 @@ This project uses multiple Terraform modules located in the `./modules` director
 
 The project's root directory contains the following files:
 
-*   **`main.tf`:** This file contains the main Terraform configuration. It uses local variables and data sources, and invokes modules to perform the resource creation based on variables provided.
+*   **`main.tf`:** This file contains the main Terraform configuration. It uses local variables and data sources, and invokes modules to perform the resource creation based on variables provided. It uses output from `01-landing-zone` to retrieve project ids based on their names.
 *   **`data.tf`:** This file defines data sources used in the project.
 *   **`outputs.tf`:** This file defines the outputs of the Terraform module, enabling data sharing with other projects if needed.
 *   **`backend.tf`:** This file specifies the GCS bucket where the Terraform state will be stored for remote state management.
@@ -98,7 +98,7 @@ Before using this Terraform project, ensure that you have the following:
 
 ## Dependencies
 
-This project depends on the successful deployment of the `01-landing-zone` Terraform project, which configures the shared VPC and basic infrastructure.
+This project depends on the successful deployment of the `01-landing-zone` Terraform project. This project uses output from `01-landing-zone` to retrieve project id based on the `project_name` variable.
 
 ## Variables
 
@@ -119,13 +119,14 @@ The following variables can be configured in a `<workspace_name>.tfvars` file (e
 *   **Customization:** You can customize the variables in `variables.tf` to fit your project-specific needs.
 *   **Resource Naming:** Be consistent with your naming conventions to ensure the resources are identifiable.
 *    **Workspaces:** You should be using Terraform workspaces for different environments, and `terraform.tfvars` should not be used in this project.
+*  **Dependency:** This project needs output from `01-landing-zone` which defines the project ids, so `01-landing-zone` needs to be deployed first.
 
 ## Troubleshooting
 
 *   **Error: Insufficient Permissions:** Ensure that your service account has the correct permissions to create and manage GCP resources.
 *  **Error: Invalid Parameters:** Double-check the values set in your  `<workspace_name>.tfvars` file to make sure all parameters are set correctly.
 *   **Connection Issues:** Verify that your network configuration allows instances to communicate with the internet through Cloud NAT and your local environment.
- * If you encounter a `dependency error` ensure that you deploy `01-landing-zone` before the `02-service-network`
+*  If you encounter a `dependency error` ensure that you deploy `01-landing-zone` before the `02-service-network`
 *  Please check the Terraform log to find more accurate error messages.
 
 ## Support
