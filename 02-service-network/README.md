@@ -1,3 +1,19 @@
+# 02-service-network: Terraform Project for Service VPC and Networking Resources
+
+This Terraform project is designed to provision and manage the network infrastructure required for services within Google Cloud Platform (GCP). It is responsible for creating VPC networks, subnets, firewall rules, and Cloud NAT configurations within the designated service projects, ensuring a secure and well-isolated environment for application deployment.
+
+## Project Overview
+
+This project focuses on creating and managing the networking resources for service projects in GCP, building upon the foundational shared VPC provisioned in the `01-landing-zone` project. It provides a reusable and modular approach to configuring networking resources, enabling quick and consistent deployment across different projects.
+
+### Key Components
+
+*   **VPC Networks:** Creates custom VPC networks within each service project.
+*   **Subnets:** Defines subnets within the VPC network, specifying IP address ranges and regions.
+*   **Firewall Rules:** Configures firewall rules to allow or deny specific traffic based on source, destination, and protocols.
+*   **Cloud NAT:** Configures Cloud NAT to enable instances in private subnets to connect to the internet.
+
+### Architecture Diagram
 
 ## Prerequisites
 
