@@ -1,3 +1,19 @@
+# 05-application: Terraform Project for Application Deployment and Gateway Configuration
+
+This Terraform project is designed to deploy a demo Tomcat application to a Google Kubernetes Engine (GKE) cluster and expose it to the internet using GKE Gateway. It also verifies database connectivity using a dbcheck.jsp page within the Tomcat application.
+
+## Project Overview
+
+This project focuses on deploying a sample web application (Tomcat) with database connectivity to GKE cluster, demonstrating end-to-end application deployment and traffic management with GKE Gateway. It builds upon the GKE cluster provisioned by the `04-gke` Terraform project.
+
+### Key Components
+
+*   **GKE Gateway:** Creates a GKE Gateway to provide an entrypoint for the web application.
+*   **HTTPRoute:** Configures the HTTPRoute for the GKE Gateway to route traffic to the Tomcat application.
+*   **Tomcat Deployment:** Deploys a Tomcat application to the GKE cluster.
+*   **Database Connection Verification:** Verifies database connectivity via dbcheck.jsp.
+
+### Architecture Diagram
 
 ## Prerequisites
 
