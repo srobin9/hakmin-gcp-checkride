@@ -268,8 +268,8 @@ Each project has specific dependencies. Please see the individual README.md file
 * Please check the Terraform log to find more accurate error messages.
 
 ## References
-* Google Cloud Foundation Fabric
-* Terraform Google Provider
+* [Google Cloud Foundation Fabric](https://www.google.com/url?sa=E&q=https%3A%2F%2Fgithub.com%2FGoogleCloudPlatform%2Fcloud-foundation-fabric%2Fblob%2Fmaster%2FREADME.md)
+* [Terraform Google Provider](Terraform Google Provider)
 
 ## Support
 If you encounter any issues or have any questions, please contact the <kimhakmin@google.com>.
