@@ -10,7 +10,7 @@ This repository provides a modular and reusable approach to managing a full GCP 
 
 *   **Full Infrastructure Automation:** Automates the entire process of provisioning GCP resources.
 *   **Modular Project Structure:** Divides the infrastructure into logical modules for better management and maintainability.
-*   **Terraform Workspaces:** Utilizes Terraform workspaces to manage different environments (dev, staging, prod, etc.) within the same code base for projects `02-service-network` to `06-application`.
+*   **Terraform Workspaces:** Utilizes Terraform workspaces to manage different environments (dev, staging, prod, etc.) within the same code base for projects `02-service-network` to `05-application`.
 *   **Remote State Management:** Stores Terraform state remotely in a Google Cloud Storage (GCS) bucket for collaboration and versioning.
 *   **Shared VPC and Security:** Enforces network security using a Shared VPC architecture.
 *   **GKE Autopilot Deployment:** Deploys and manages a GKE Autopilot cluster.
