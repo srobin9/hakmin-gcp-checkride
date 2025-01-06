@@ -234,28 +234,21 @@ terraform {
 Each project has specific dependencies. Please see the individual README.md files for each project for details.
 
 ## Important Considerations
-Authentication: Ensure that Terraform is properly authenticated with the correct permissions to manage your GCP projects.
 
-State Management: Terraform state should be stored remotely using a GCS bucket, and you should initialize with the same backend settings.
-
-Variable Files: 01-landing-zone project should use terraform.tfvars file and other projects should create specific tfvars file for their environment using workspaces.
-
-Versioning: Always use stable versions for dependencies and tools.
-
-Resource Naming: Follow consistent naming conventions across all projects.
-
-Dependency: Make sure you run all the projects in the order mentioned above.
+* **Authentication**: Ensure that Terraform is properly authenticated with the correct permissions to manage your GCP projects.
+* **State Management**: Terraform state should be stored remotely using a GCS bucket, and you should initialize with the same backend settings.
+* **Variable Files**: 01-landing-zone project should use terraform.tfvars file and other projects should create specific tfvars file for their environment using workspaces.
+* **Versioning**: Always use stable versions for dependencies and tools.
+* **Resource Naming**: Follow consistent naming conventions across all projects.
+* **Dependency**: Make sure you run all the projects in the order mentioned above.
 
 ## Troubleshooting
-Error: Insufficient Permissions: Ensure that your service account has the correct permissions to create and manage GCP resources.
 
-Error: Invalid Parameters: Double-check the values set in your terraform.tfvars files.
-
-Connection Issues: Verify that your network configuration and application settings allow your app to connect to AlloyDB correctly.
-
-If you encounter a dependency error ensure that you deploy the projects in correct order.
-
-Please check the Terraform log to find more accurate error messages.
+* **Error: Insufficient Permissions**: Ensure that your service account has the correct permissions to create and manage GCP resources.
+* **Error: Invalid Parameters**: Double-check the values set in your terraform.tfvars files.
+* **Connection Issues**: Verify that your network configuration and application settings allow your app to connect to AlloyDB correctly.
+* If you encounter a dependency error ensure that you deploy the projects in correct order.
+* Please check the Terraform log to find more accurate error messages.
 
 ## Support
 If you encounter any issues or have any questions, please contact the <kimhakmin@google.com>.
