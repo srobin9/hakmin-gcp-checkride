@@ -1,4 +1,4 @@
-# 05-helm: Terraform Project for Deploying Applications with Helm
+# 04-helm: Terraform Project for Deploying Applications with Helm
 
 This Terraform project is designed to deploy applications, such as Jenkins and ArgoCD, to a Google Kubernetes Engine (GKE) cluster using Helm. It is responsible for managing Helm releases and ensuring that applications are deployed in a consistent and repeatable manner.
 
