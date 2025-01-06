@@ -36,9 +36,6 @@ The repository is structured into the following Terraform projects, each represe
 6.  **05-application:**
     *   Deploys a sample Tomcat application with database connectivity, configures GKE Gateway, and exposes both tomcat and nginx applications to the internet.
 
-## Project Structure Diagram
-<img width="1038" alt="Screenshot 2025-01-06 at 2 45 53 PM" src="https://github.com/user-attachments/assets/47f23949-dd4d-4c62-aec6-ab9a598af456" />
-
 ### Project Dependencies
 
 The projects are designed with the following dependencies:
@@ -49,11 +46,14 @@ The projects are designed with the following dependencies:
 *   `04-helm` depends on `03-gke`: Requires a GKE cluster created by `03-gke` and uses its output to connect Helm provider.
 *   `05-application` depends on `01-landing-zone`, `02-service-network`, `03-db`, and `03-gke`: Uses output from `03-db` to retrieve database information and `03-gke` to get GKE cluster details.
 
+#### Project Dependency Diagram
+<img width="1038" alt="Screenshot 2025-01-06 at 2 45 53 PM" src="https://github.com/user-attachments/assets/47f23949-dd4d-4c62-aec6-ab9a598af456" />
+
 ### Overall Architecture Diagram
-## GCP Architecture 
+#### GCP Architecture 
 <img width="1134" alt="Screenshot 2025-01-06 at 2 43 07 PM" src="https://github.com/user-attachments/assets/94185e4c-8ee1-415a-8325-6d474240b33a" />
 
-## GKE Cluster Architcture
+#### GKE Cluster Architcture
 <img width="1111" alt="Screenshot 2025-01-06 at 2 43 19 PM" src="https://github.com/user-attachments/assets/6e531543-d0d0-42d2-be7d-029c4ad7bf0a" />
 
 ## Prerequisites
