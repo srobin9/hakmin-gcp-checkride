@@ -1,4 +1,4 @@
-# 06-application: Terraform Project for Application Deployment and Gateway Configuration
+# 05-application: Terraform Project for Application Deployment and Gateway Configuration
 
 This Terraform project is designed to deploy a demo Tomcat application and a simple Nginx application to a Google Kubernetes Engine (GKE) cluster and expose them to the internet using GKE Gateway. It also verifies database connectivity using a `dbcheck.jsp` page within the Tomcat application.
 
