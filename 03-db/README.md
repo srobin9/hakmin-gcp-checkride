@@ -1,3 +1,18 @@
+# 03-db: Terraform Project for AlloyDB Instance Provisioning
+
+This Terraform project is designed to provision and manage AlloyDB instances within Google Cloud Platform (GCP). It is responsible for creating AlloyDB clusters, instances, and configuring network access within the designated service projects.
+
+## Project Overview
+
+This project focuses on creating and managing AlloyDB database resources in GCP, providing a reusable and modular approach to configuring databases, allowing for quick and consistent deployment across different projects.
+
+### Key Components
+
+*   **AlloyDB Cluster:** Creates AlloyDB clusters within a designated region and network.
+*   **AlloyDB Instance:** Configures AlloyDB instances within the created cluster, specifying machine types, and other settings.
+* **Connection Management:** Handles the database connection settings with private IP.
+
+### Architecture Diagram
 
 ## Prerequisites
 
