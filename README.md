@@ -267,5 +267,9 @@ Each project has specific dependencies. Please see the individual README.md file
 * If you encounter a dependency error ensure that you deploy the projects in correct order.
 * Please check the Terraform log to find more accurate error messages.
 
+## References
+* Google Cloud Foundation Fabric
+* Terraform Google Provider
+
 ## Support
 If you encounter any issues or have any questions, please contact the <kimhakmin@google.com>.
