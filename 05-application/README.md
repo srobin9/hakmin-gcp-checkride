@@ -65,34 +65,25 @@ Before using this Terraform project, ensure that you have the following:
 ### Configuration
 
 1. Create a workspace:
-   ```bash
-   terraform workspace new <workspace_name>
-   ```
+    ```bash
+    terraform workspace new <workspace_name>
+    ```
 2. Select a workspace:
-   ```
-   terraform workspace select <workspace_name>
-   ```
-Review and modify the <workspace_name>.tfvars file with your specific settings, such as:
+    ```bash
+    terraform workspace select <workspace_name>
+    ```
+3. Review and modify the `<workspace_name>.tfvars` file with your specific settings, such as:
+    *   `project_name`: The name of the GCP project, this value is used to look up project ID from 01-landing-zone output.
+    *   `region`: The GCP region for GKE resources.
+    *   `gateway_namespace`: The namespace for the GKE Gateway.
+    * `app_namespace` : The namespace for Tomcat deployment and HTTPRoute.
+    * `db_connection_uri` : The connection string of AlloyDB which is retrieved by 03-db output.
+    * `db_private_ip` : The private IP address and Port of AlloyDB instance, which is retrieved by 03-db output.
+    * `db_user` : The username to connect AlloyDB.
+    * `db_password` : The password to connect AlloyDB.
+    * `db_name` : The database name to connect AlloyDB.
 
-project_id: The GCP project ID.
+4. Optionally, customize the variables.tf file to change any of the variable defaults.
 
-region: The GCP region.
-
-gateway_namespace: The namespace for the GKE Gateway.
-
-app_namespace: The namespace for Tomcat deployment and HTTPRoute.
-
-db_connection_uri: The connection string of AlloyDB which is retrieved by 03-db output.
-
-db_private_ip: The private IP address and Port of AlloyDB instance, which is retrieved by 03-db output.
-
-db_user: The username to connect AlloyDB.
-
-db_password: The password to connect AlloyDB.
-
-db_name: The database name to connect AlloyDB.
-
-Optionally, customize the variables.tf file to change any of the variable defaults.
-
-Deployment
-Plan your changes:
+### Deployment
+1. Plan your changes:
