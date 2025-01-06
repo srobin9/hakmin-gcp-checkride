@@ -15,22 +15,3 @@ provider "google-beta" {
   billing_project       = var.billing_project
   region                = var.region # 리전 변수 추가
 }
-
-# Helm Provider 설정
-data "google_client_config" "default" {}
-
-# Kubernetes 제공자 구성
-provider "kubernetes" {
-    host                   = "https://${module.gke_cluster["dev"].cluster_endpoint}"
-    token                  = data.google_client_config.default.access_token
-    cluster_ca_certificate = base64decode(module.gke_cluster["dev"].cluster_ca_certificate)
-}
-
-# Helm 제공자 구성
-provider "helm" {
-    kubernetes {
-      host                   = "https://${module.gke_cluster["dev"].cluster_endpoint}"
-      token                  = data.google_client_config.default.access_token
-      cluster_ca_certificate = base64decode(module.gke_cluster["dev"].cluster_ca_certificate)
-    }
-}
