@@ -48,6 +48,9 @@ Before deploying this blueprint, ensure you have the following:
     ```
 
 ## Deployment
+
+**Important:** This Terraform project (`01-landing-zone`) must be executed from a dedicated Terraform Host Project. All other projects (02-06) can be run from the respective projects.
+
 To run this Terraform code, you'll need to use either a service account or a user account. This account must have the appropriate IAM roles to provision the resources defined in the blueprint and needs to be authenticated with Google Cloud.
 ### Option 1: Impersonate Service Account
    This option allows Cloud Shell to impersonate a service account with the necessary permissions to deploy your Terraform infrastructure. This approach aligns with the principle of least privilege, as recommended by [Google Cloud's security best practices](https://cloud.google.com/security/best-practices).
