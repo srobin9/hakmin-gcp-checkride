@@ -17,24 +17,28 @@ This repository provides a modular and reusable approach to managing a full GCP 
 *   **CI/CD Integration:** Deploys CI/CD tools like Jenkins and ArgoCD using Helm.
 *   **Database Connection:** Demonstrates database connection using a Tomcat application and AlloyDB.
 *   **Custom Tomcat Image:** Deploys a Tomcat application with a custom image which include postgresql driver and dbcheck jsp.
-*   **Nginx Load Balancing:** Deploys Nginx to demonstrate load balancing
+*   **GKE Gateway:** Creates a GKE Gateway to provide an advanced entry point for the web applications, offering features beyond traditional ingress controllers.
 
 ### Project Structure
 
-The repository is structured into the following Terraform projects, each representing a specific stage of infrastructure deployment:
-
 1.  **01-landing-zone:**
     *   Sets up the GCP Organization, common resources, and a Shared VPC host project. This project is deployed once as a foundation and does not use workspaces.
+     *  This project must be executed from a dedicated Terraform Host Project.
 2.  **02-service-network:**
     *   Provisions service VPCs, subnets, firewall rules, and Cloud NAT within service projects that will use the Shared VPC created by `01-landing-zone`.
+      * This project should be executed within the target gcp project
 3.  **03-db:**
     *   Deploys AlloyDB instances and manages related configurations, or Cloud SQL instances if desired.
-4.  **03-gke:**
+      * This project should be executed within the target gcp project
+4.  **04-gke:**
     *   Provisions and manages a GKE Autopilot or Standard cluster, leveraging the networking configurations from `02-service-network`.
-5.  **04-helm:**
-    *   Deploys applications like Jenkins and ArgoCD using Helm charts, setting up the CI/CD pipeline.
-6.  **05-application:**
+      * This project should be executed within the target gcp project
+5.  **05-helm:**
+    *   Deploys applications like Jenkins and ArgoCD using Helm charts.
+      * This project should be executed within the target gcp project
+6.  **06-application:**
     *   Deploys a sample Tomcat application with database connectivity, configures GKE Gateway, and exposes both tomcat and nginx applications to the internet.
+        *  This project should be executed within the target gcp project
 
 ### Project Dependencies
 
@@ -65,6 +69,8 @@ Before deploying this repository, ensure that you have the following:
 *   Proper authentication and authorization to manage GCP resources.
 *   Basic understanding of Terraform, GCP, Kubernetes, and Helm.
 * All sub-folders of this directory should have their own `terraform.tfvars` file that define variables, except for `01-landing-zone`.
+* You must have a dedicated Terraform Host project to run the 01-landing-zone project
+* You must have service project to run the remaining projects from 02-service-network to 05-application.
 
 ## Usage
 
@@ -82,7 +88,7 @@ Before deploying this repository, ensure that you have the following:
     terraform apply -var-file="terraform.tfvars"
     ```
     *   This project sets up the foundational resources, including the GCP Organization policies and the Shared VPC host project.
-    *  `01-landing-zone` does not use workspaces, you should specify `terraform.tfvars` directly.
+    *  `01-landing-zone` does not use workspaces, you should specify `terraform.tfvars` directly and must be executed on a dedicated Terraform Host Project.
 
 ### Stage 2: Provisioning Service Networks (02-service-network)
 
@@ -129,6 +135,7 @@ Before deploying this repository, ensure that you have the following:
     ```
     *   This project provisions AlloyDB instances (or Cloud SQL instances if the module is uncommented) within the networking configurations set up by `02-service-network`.
     * Use workspace to deploy databases for different environments (e.g. create 'dev' workspace to create databases for development environment)
+    *  This should be executed on the service project where you want to create resources
 
 ### Stage 4: Setting Up Kubernetes (03-gke)
 
@@ -152,6 +159,7 @@ Before deploying this repository, ensure that you have the following:
     ```
     *   This project provisions a GKE Autopilot or Standard cluster.
     *   Use workspace to deploy GKE clusters for different environments (e.g. create 'dev' workspace to create a development GKE cluster)
+    *  This should be executed on the service project where you want to create resources
 
 ### Stage 5: Deploying CI/CD Tools (04-helm)
 
@@ -175,6 +183,7 @@ Before deploying this repository, ensure that you have the following:
     ```
     *   This project deploys applications like Jenkins and ArgoCD using Helm.
     *   Use workspace to deploy Jenkins and ArgoCD for different environments (e.g. create 'dev' workspace to create a CI/CD tool for development environment)
+    *  This should be executed on the service project where you want to create resources
 
 ### Stage 6: Deploying the Application (05-application)
 
@@ -198,7 +207,8 @@ Before deploying this repository, ensure that you have the following:
     ```
     *   This project deploys a sample Tomcat application and Nginx application, configures GKE Gateway, and manages database connections.
     *  Use workspace to deploy application for different environments (e.g. create 'dev' workspace to deploy tomcat for development)
-
+    *  This should be executed on the service project where you want to create resources
+  
 ### Terraform Workspaces
 
 This repository uses Terraform workspaces to manage different environments, enabling you to deploy the same infrastructure with different configurations.
@@ -242,6 +252,7 @@ Each project has specific dependencies. Please see the individual README.md file
 ## Important Considerations
 
 * **Authentication**: Ensure that Terraform is properly authenticated with the correct permissions to manage your GCP projects.
+* **Terraform Execution**: 01-landing-zone project must be executed on a dedicated Terraform Host project. Other project should be executed on the gcp project that you want to create the resource.
 * **State Management**: Terraform state should be stored remotely using a GCS bucket, and you should initialize with the same backend settings.
 * **Variable Files**: 01-landing-zone project should use terraform.tfvars file and other projects should create specific tfvars file for their environment using workspaces.
 * **Versioning**: Always use stable versions for dependencies and tools.
