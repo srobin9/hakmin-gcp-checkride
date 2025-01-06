@@ -42,21 +42,6 @@ This project has the following file structure in the root directory:
 *   **`variables.tf`**: This file defines variables that allow customization of the resources, such as the GCP organization ID, billing account, and folder names.
 *   **`versions.tf`**: This file defines provider versions to enforce specific provider version.
 *   **`terraform.tfvars`**: This file is used to define and overwrite default values in the `variables.tf` for the initial project setup.
-## Prerequisites
-
-Before deploying this blueprint, ensure you have the following:
-
-*   **Google Cloud Account:** A Google Cloud Platform account with billing enabled.
-*   **GCP Cloud Shell:** Click "Activate Cloud Shell" at the top of the Google Cloud console or navigate to [shell.cloud.google.com](https://shell.cloud.google.com).
-*   **Active Billing Account:** If you haven't set up a working billing account, please refer to the Bootstrap section in the Appendix.
-*   **Terraform Host Project:** You must create a separate GCP project to host your Terraform state files and run Terraform deployments.
-*   **State File:** This blueprint utilizes a Google Cloud Storage (GCS) backend to store the Terraform state file. If the bucket in your `backend.tf` file does not point to a valid GCS bucket, you will need to create one yourself. See the Bootstrap step in the Appendix.
-*   **Git Repository:** Code should be committed to a git repository such as GCP Secure Source Manager, GitHub, Azure DevOps, or similar depending on your needs. For detailed instructions, see Git Repository in the appendix.
-*   **Update Variables:** Verify the `terraform.tfvars` file contains your desired organization ID and billing account number.
-    ```terraform
-      org_id          = "<please confirm your organization id here>"
-      billing_account = "<please confirm your billing account number here>"
-    ```
 
 ## Deployment
 
