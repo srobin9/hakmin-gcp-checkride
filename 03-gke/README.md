@@ -1,4 +1,4 @@
-# 04-gke: Terraform Project for GKE Autopilot Cluster Provisioning
+# 03-gke: Terraform Project for GKE Autopilot Cluster Provisioning
 
 This Terraform project is designed to provision and manage a Google Kubernetes Engine (GKE) Autopilot cluster within Google Cloud Platform (GCP). It is responsible for creating the GKE Autopilot cluster and configuring necessary settings for application deployment.
 
