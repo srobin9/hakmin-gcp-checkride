@@ -21,22 +21,22 @@ This repository provides a modular and reusable approach to managing a full GCP 
 
 ### Project Structure
 
-1.  **01-landing-zone:**
+*  **01-landing-zone:**
     *   Sets up the GCP Organization, common resources, and a Shared VPC host project. This project is deployed once as a foundation and does not use workspaces.
      *  This project must be executed from a dedicated Terraform Host Project.
-2.  **02-service-network:**
+*  **02-service-network:**
     *   Provisions service VPCs, subnets, firewall rules, and Cloud NAT within service projects that will use the Shared VPC created by `01-landing-zone`.
       * This project should be executed within the target gcp project
-3.  **03-db:**
+*  **03-db:**
     *   Deploys AlloyDB instances and manages related configurations, or Cloud SQL instances if desired.
       * This project should be executed within the target gcp project
-4.  **04-gke:**
+*  **03-gke:**
     *   Provisions and manages a GKE Autopilot or Standard cluster, leveraging the networking configurations from `02-service-network`.
       * This project should be executed within the target gcp project
-5.  **05-helm:**
+*  **04-helm:**
     *   Deploys applications like Jenkins and ArgoCD using Helm charts.
       * This project should be executed within the target gcp project
-6.  **06-application:**
+*  **05-application:**
     *   Deploys a sample Tomcat application with database connectivity, configures GKE Gateway, and exposes both tomcat and nginx applications to the internet.
         *  This project should be executed within the target gcp project
 
