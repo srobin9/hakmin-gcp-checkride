@@ -11,8 +11,9 @@ module "gke_cluster" {
   location                = var.region
   network                 = data.terraform_remote_state.service_network.outputs.vpc_names
   subnetwork              = each.value.subnet_name
-  enable_autopilot        = each.value.enable_autopilot
+  enable_autopilot        = each.value.enable_autopilot #Auto Pilot or Standard
   gateway_channel         = each.value.gateway_channel
+  enable_cost_allocation  = each.value.cost_management_config #Enabling Cost Analysis of GKE Resource
   secondary_range_pods    = "pods"
   secondary_range_services = "services"
   default_max_pods_per_node = 32

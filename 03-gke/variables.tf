@@ -39,6 +39,7 @@ variable "gke_clusters" {
     subnet_name             = string
     enable_autopilot        = bool
     gateway_channel         = string
+    cost_management_config  = bool #Enables Cost Allocation Feature and the cluster name and namespace of your GKE workloads appear in the labels field of the billing export to BigQuery
   #  master_authorized_range = string 
   }))
 }

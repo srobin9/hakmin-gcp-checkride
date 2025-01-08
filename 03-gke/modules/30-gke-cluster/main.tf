@@ -54,6 +54,13 @@ resource "google_container_cluster" "cluster" {
     channel = var.gateway_channel
   }
 
+  dynamic "cost_management_config" {
+    for_each = var.enable_cost_allocation ? [1] : []
+    content {
+      enabled = var.enable_cost_allocation
+    }
+  }
+  
   enable_shielded_nodes = var.enable_autopilot == false ? var.enable_shielded_nodes : null
 
   # node_config {}

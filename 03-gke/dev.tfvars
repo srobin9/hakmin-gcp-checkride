@@ -11,6 +11,7 @@ gke_clusters = [
     subnet_name             = "subnet-gke"
     enable_autopilot        = true
     gateway_channel         = "CHANNEL_STANDARD"
+    cost_management_config  = true
     #  master_authorized_range = "10.100.0.0/24"  
   }
 ]
